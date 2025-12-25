@@ -1,19 +1,47 @@
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
+
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
 
   return (
     <div className={darkMode ? "dark" : ""}>
       <div className="min-h-screen bg-slate-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100">
 
         {/* ================= NAVBAR ================= */}
-        <nav className="fixed top-0 left-0 w-full bg-white dark:bg-gray-900 shadow-sm z-50">
-          <div className="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
-            <h1 className="font-bold text-blue-600">Saaqib</h1>
+        <motion.nav
+          initial={{ y: -80 }}
+          animate={{ y: 0 }}
+          transition={{ duration: 0.6 }}
+          className={`fixed top-0 left-0 w-full z-50 transition-all duration-300
+            ${scrolled
+              ? "bg-white/80 dark:bg-gray-900/80 backdrop-blur-md shadow-md py-2"
+              : "bg-transparent py-4"
+            }`}
+        >
 
-            <div className="space-x-6 text-sm font-medium">
+          <div className="max-w-6xl mx-auto px-6 py-4 relative flex items-center">
+
+            {/* Logo (left) */}
+            <h1 className="font-bold text-blue-600 absolute left-6">
+              
+            </h1>
+
+            {/* Centered Nav Links */}
+            <div className="mx-auto flex items-center space-x-6 text-sm font-bold font-xlarge">
               <a href="#about" className="hover:text-blue-600 dark:hover:text-blue-400">About</a>
               <a href="#skills" className="hover:text-blue-600 dark:hover:text-blue-400">Skills</a>
               <a href="#projects" className="hover:text-blue-600 dark:hover:text-blue-400">Projects</a>
@@ -21,13 +49,15 @@ function App() {
 
               <button
                 onClick={() => setDarkMode(!darkMode)}
-                className="ml-4 px-3 py-1 rounded-md border text-sm hover:bg-blue-50 dark:hover:bg-gray-800"
+                className="ml-4 px-3 py-1 rounded-md border text-sm hover:bg-blue-50 dark:hover:bg-gray-800 absolute right-6"
               >
                 {darkMode ? "☀️ Light" : "🌙 Dark"}
               </button>
             </div>
+
           </div>
-        </nav>
+        </motion.nav>
+
 
         {/* ================= HERO ================= */}
         <motion.section
@@ -37,7 +67,8 @@ function App() {
           transition={{ duration: 0.8 }}
           className="min-h-screen flex items-center px-6 bg-white dark:bg-gray-800 pt-24"
         >
-          <div className="max-w-6xl mx-auto w-full grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+          <div className="max-w-6xl mx-auto px-6 relative flex items-center">
+
 
             {/* LEFT SIDE — TEXT */}
             <div className="text-center md:text-left">
